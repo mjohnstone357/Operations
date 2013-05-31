@@ -56,7 +56,7 @@ public class GraphTests {
     }
 
     /**
-     * Add two nodes, connect them, and check that each is referenced by the other.
+     * Add two nodes, connect them, and check that the first refers to the second, but not the other way round
      */
     @Test
     public void should_be_able_to_navigate_between_nodes() {
@@ -71,12 +71,11 @@ public class GraphTests {
         assertEquals(node2, linkedNodesFromNode1.iterator().next());
 
         Set<Node> linkedNodesFromNode2 = node2.getLinkedNodes();
-        assertEquals(1, linkedNodesFromNode2.size());
-        assertEquals(node1, linkedNodesFromNode2.iterator().next());
+        assertEquals(0, linkedNodesFromNode2.size());
     }
 
     /**
-     * Add two nodes to a graph, and
+     * Add two nodes to a graph, link them together, then attempt to
      */
 
     private Node createNode() {

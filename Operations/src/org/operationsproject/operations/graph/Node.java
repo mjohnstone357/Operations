@@ -19,7 +19,6 @@ public class Node {
     public void linkTo(Node otherNode) {
         if (!linkedNodes.contains(otherNode)) {
             linkedNodes.add(otherNode);
-            otherNode.linkTo(this);
         }
     }
 

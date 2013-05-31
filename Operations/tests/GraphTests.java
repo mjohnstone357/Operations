@@ -1,5 +1,6 @@
 import org.junit.Before;
 import org.junit.Test;
+import org.operationsproject.operations.graph.CycleException;
 import org.operationsproject.operations.graph.Graph;
 import org.operationsproject.operations.graph.Node;
 
@@ -7,6 +8,8 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKED_TO_BY;
+import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKS_TO;
 
 /**
  * @author Matthew Johnstone
@@ -59,24 +62,46 @@ public class GraphTests {
      * Add two nodes, connect them, and check that the first refers to the second, but not the other way round
      */
     @Test
-    public void should_be_able_to_navigate_between_nodes() {
+    public void should_be_able_to_navigate_between_nodes() throws CycleException {
 
         Node node1 = createNode();
         Node node2 = createNode();
 
-        node1.linkTo(node2);
+        graph.addNodes(node1, node2);
+        graph.linkNodes(node1, node2);
 
-        Set<Node> linkedNodesFromNode1 = node1.getLinkedNodes();
-        assertEquals(1, linkedNodesFromNode1.size());
-        assertEquals(node2, linkedNodesFromNode1.iterator().next());
+        Set<Node> nodesLinkingToNode1 = graph.getLinkedNodes(LINKS_TO, node1);
+        assertEquals(0, nodesLinkingToNode1.size());
 
-        Set<Node> linkedNodesFromNode2 = node2.getLinkedNodes();
-        assertEquals(0, linkedNodesFromNode2.size());
+        Set<Node> nodesLinkedToByNode1 = graph.getLinkedNodes(LINKED_TO_BY, node1);
+        assertEquals(1, nodesLinkedToByNode1.size());
+        assertEquals(node2, nodesLinkedToByNode1.iterator().next());
+
+        Set<Node> nodesLinkingToNode2 = graph.getLinkedNodes(LINKS_TO, node2);
+        assertEquals(1, nodesLinkingToNode2.size());
+        assertEquals(node1, nodesLinkingToNode2.iterator().next());
+
+        Set<Node> nodesLinkedToByNode2 = graph.getLinkedNodes(LINKED_TO_BY, node2);
+        assertEquals(0, nodesLinkedToByNode2.size());
     }
 
     /**
-     * Add two nodes to a graph, link them together, then attempt to
+     * Add two nodes to a graph, and attempt to link them together, forming a cycle
      */
+    @Test(expected = CycleException.class)
+    public void should_prevent_cycle_between_two_nodes_from_being_allowed() throws CycleException {
+        Node node1 = createNode();
+        Node node2 = createNode();
+
+        graph.addNodes(node1, node2);
+
+        graph.linkNodes(node1, node2);
+        graph.linkNodes(node2, node1);
+    }
+
+    // TODO Test adding the same link twice
+
+    // TODO Tests for lots more complicated cycle detection
 
     private Node createNode() {
         return new Node();

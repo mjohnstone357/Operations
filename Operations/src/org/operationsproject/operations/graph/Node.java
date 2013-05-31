@@ -29,7 +29,7 @@ public class Node<T> {
     public static Node<T> attachTo(Node[] parents, T object)
     {
         Node<T> newNode = new Node<T>(object);
-        foreach(Node<T> N:parents)
+        for(Node<T> N:parents)
         {
             N.linkedNodes.add(newNode);
         }

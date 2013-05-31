@@ -12,8 +12,6 @@ public class Node {
 
     private Set<Node> linkedNodes;
 
-
-
     public Node() {
         linkedNodes = new HashSet<>();
     }

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import static org.operationsproject.operations.graph.Graph.EdgeDirection;
 
 /**
+ * Class representing the directed link from one Node in a Graph to another Node in that Graph.
  * @author Matthew Johnstone
  *         Date: 31/05/13
  *         Time: 23:07

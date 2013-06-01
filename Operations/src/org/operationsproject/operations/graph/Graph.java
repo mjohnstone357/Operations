@@ -7,6 +7,7 @@ import java.util.*;
 import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKED_TO_BY;
 
 /**
+ * Class representing an acyclic directed graph.
  * @author Matthew Johnstone
  *         Date: 31/05/13
  *         Time: 20:39
@@ -23,16 +24,24 @@ public class Graph {
         nodeLinks = new ArrayList<>();
     }
 
+    /**
+     * Add a node to the graph. The node won't be connected to any other node on the graph.
+     * @param node the node to add
+     */
     public void addNode(Node node) {
         nodes.add(node);
     }
 
+    /**
+     * Add a set of nodes the graph.
+     * @param nodes the nodes to add
+     */
     public void addNodes(Node... nodes) {
         Collections.addAll(this.nodes, nodes);
     }
 
     /**
-     * Link nodes in the graph
+     * Link nodes in the graph.
      * @param node1 the source node
      * @param node2 the target node
      * @return true if and only if the link from node1 to node2 already existed in this Graph
@@ -53,9 +62,11 @@ public class Graph {
         return alreadyPresent;
     }
 
-    private void validateNodesArePresentInGraph(Node node1, Node node2) throws UnknownNodeException {
-        if (!nodes.contains(node1) || !nodes.contains(node2)) {
-            throw new UnknownNodeException();
+    private void validateNodesArePresentInGraph(Node... nodesToCheck) throws UnknownNodeException {
+        for (Node node : nodesToCheck) {
+            if (!nodes.contains(node)) {
+                throw new UnknownNodeException();
+            }
         }
     }
 
@@ -86,10 +97,19 @@ public class Graph {
 
     }
 
+    /**
+     * @return all of the nodes contained within this Graph.
+     */
     public Set<Node> getAllNodes() {
         return nodes;
     }
 
+    /**
+     * Get nodes linking to, or linked to by the given node.
+     * @param direction the direction to look for nodes with respect to the given node
+     * @param node the node whose neighbours are wanted
+     * @return all of the nodes in the Graph which link to- or are linked to by- the given node, as requested
+     */
     public Set<Node> getLinkedNodes(EdgeDirection direction, Node node) {
         Set<Node> linkedNodes = new HashSet<>();
         for (NodeLink nodeLink : nodeLinks) {

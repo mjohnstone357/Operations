@@ -1,3 +1,5 @@
+package org.operationsproject.operations.graph;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.operationsproject.operations.graph.CycleException;

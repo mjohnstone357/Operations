@@ -2,16 +2,10 @@ package org.operationsproject.operations.graph;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.operationsproject.operations.graph.CycleException;
-import org.operationsproject.operations.graph.Graph;
-import org.operationsproject.operations.graph.Node;
-import org.operationsproject.operations.graph.UnknownNodeException;
 
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKED_TO_BY;
 import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKS_TO;
 

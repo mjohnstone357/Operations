@@ -238,8 +238,6 @@ public class GraphTest {
         assertEquals(1, linkedNodes.size());
     }
 
-    // TODO Tests for lots more complicated cycle detection
-
     private Node createNode() {
         return new Node();
     }

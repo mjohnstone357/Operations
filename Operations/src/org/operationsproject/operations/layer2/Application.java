@@ -76,7 +76,12 @@ public class Application {
 
             Set<Node> linkedNodes1 = graph.getLinkedNodes(Graph.EdgeDirection.LINKED_TO_BY, returnNode);
 
-            returnNode = linkedNodes1.iterator().next();
+            if (!linkedNodes1.isEmpty()) {
+                returnNode = linkedNodes1.iterator().next();
+            } else {
+                break;
+            }
+
 
             if (returnNode == node) {
                 break;

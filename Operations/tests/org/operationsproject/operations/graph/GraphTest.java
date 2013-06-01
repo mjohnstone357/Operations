@@ -98,6 +98,77 @@ public class GraphTest {
     }
 
     /**
+     * Try to link two nodes having added neither of them to the graph
+     */
+    @Test(expected = UnknownNodeException.class)
+    public void should_only_link_node_if_it_exists_in_the_graph_0() throws CycleException, UnknownNodeException {
+        Node node1 = createNode();
+        Node node2 = createNode();
+
+        graph.linkNodes(node1, node2);
+    }
+
+    /**
+     * Try to link two nodes having only added the first to the graph
+     */
+    @Test(expected = UnknownNodeException.class)
+    public void should_only_link_node_if_it_exists_in_the_graph_1a() throws CycleException, UnknownNodeException {
+        Node node1 = createNode();
+        Node node2 = createNode();
+
+        graph.addNode(node1);
+
+        graph.linkNodes(node1, node2);
+    }
+
+    /**
+     * Try to link two nodes having only added the second to the graph
+     */
+    @Test(expected = UnknownNodeException.class)
+    public void should_only_link_node_if_it_exists_in_the_graph_1b() throws CycleException, UnknownNodeException {
+        Node node1 = createNode();
+        Node node2 = createNode();
+
+        graph.addNode(node2);
+
+        graph.linkNodes(node1, node2);
+    }
+
+    /**
+     * Add three nodes A, B and C to a graph, and attempt to link A to B. B to C and C to A, forming a cycle
+     */
+    @Test(expected = CycleException.class)
+    public void should_prevent_cycle_between_three_nodes_from_being_allowed() throws CycleException, UnknownNodeException {
+        Node node1 = createNode();
+        Node node2 = createNode();
+        Node node3 = createNode();
+
+        graph.addNodes(node1, node2, node3);
+
+        graph.linkNodes(node1, node2);
+        graph.linkNodes(node2, node3);
+        graph.linkNodes(node3, node1);
+    }
+
+    /**
+     * Add four nodes A, B, C and D to a graph, and attempt to link A to B. B to C, C to D and D to A, forming a cycle
+     */
+    @Test(expected = CycleException.class)
+    public void should_prevent_cycle_between_four_nodes_from_being_allowed() throws CycleException, UnknownNodeException {
+        Node node1 = createNode();
+        Node node2 = createNode();
+        Node node3 = createNode();
+        Node node4 = createNode();
+
+        graph.addNodes(node1, node2, node3, node4);
+
+        graph.linkNodes(node1, node2);
+        graph.linkNodes(node2, node3);
+        graph.linkNodes(node3, node4);
+        graph.linkNodes(node4, node1);
+    }
+
+    /**
      * Add two nodes to a graph, and link them together twice, asserting that this is indicated by linkNodes and that
      * the link does not count twice.
      */

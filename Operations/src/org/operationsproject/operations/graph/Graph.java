@@ -62,7 +62,7 @@ public class Graph {
         return alreadyPresent;
     }
 
-    private void validateNodesArePresentInGraph(Node... nodesToCheck) throws UnknownNodeException {
+    private void validateNodesArePresentInGraph(@NotNull Node... nodesToCheck) throws UnknownNodeException {
         for (Node node : nodesToCheck) {
             if (!nodes.contains(node)) {
                 throw new UnknownNodeException();

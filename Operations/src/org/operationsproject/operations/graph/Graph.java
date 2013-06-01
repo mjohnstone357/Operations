@@ -33,13 +33,14 @@ public class Graph {
         assert nodes.contains(node1);
         assert nodes.contains(node2);
 
-        boolean alreadyPresent = holdsLinkBetween(node1, node2);
-
-        nodeLinks.add(new NodeLink(node1, node2));
         if (holdsLinkBetween(node2, node1)) {
             // Primitive two-node cycle detection
             throw new CycleException();
         }
+
+        boolean alreadyPresent = holdsLinkBetween(node1, node2);
+
+        nodeLinks.add(new NodeLink(node1, node2));
 
         return alreadyPresent;
     }

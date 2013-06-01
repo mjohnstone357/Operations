@@ -3,6 +3,7 @@ import org.junit.Test;
 import org.operationsproject.operations.graph.CycleException;
 import org.operationsproject.operations.graph.Graph;
 import org.operationsproject.operations.graph.Node;
+import org.operationsproject.operations.graph.UnknownNodeException;
 
 import java.util.Set;
 
@@ -63,7 +64,7 @@ public class GraphTests {
      * Add two nodes, connect them, and check that the first refers to the second, but not the other way round
      */
     @Test
-    public void should_be_able_to_navigate_between_nodes() throws CycleException {
+    public void should_be_able_to_navigate_between_nodes() throws CycleException, UnknownNodeException {
 
         Node node1 = createNode();
         Node node2 = createNode();
@@ -90,7 +91,7 @@ public class GraphTests {
      * Add two nodes to a graph, and attempt to link them together, forming a cycle
      */
     @Test(expected = CycleException.class)
-    public void should_prevent_cycle_between_two_nodes_from_being_allowed() throws CycleException {
+    public void should_prevent_cycle_between_two_nodes_from_being_allowed() throws CycleException, UnknownNodeException {
         Node node1 = createNode();
         Node node2 = createNode();
 
@@ -105,7 +106,7 @@ public class GraphTests {
      * the link does not count twice.
      */
     @Test
-    public void should_indicate_that_link_already_existed() throws CycleException {
+    public void should_indicate_that_link_already_existed() throws CycleException, UnknownNodeException {
         Node node1 = createNode();
         Node node2 = createNode();
 

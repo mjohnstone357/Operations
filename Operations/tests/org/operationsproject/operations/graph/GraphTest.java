@@ -169,6 +169,58 @@ public class GraphTest {
     }
 
     /**
+     * A convoluted graph which almost has a cycle
+     */
+    @Test
+    public void should_allow_convoluted_graph_to_be_constructed() throws CycleException, UnknownNodeException {
+        Node a = createNode();
+        Node b = createNode();
+        Node c = createNode();
+        Node d = createNode();
+        Node e = createNode();
+
+        Node x = createNode();
+
+        graph.addNodes(a, b, c, d, e, x);
+
+        graph.linkNodes(a, b);
+        graph.linkNodes(a, c);
+        graph.linkNodes(b, d);
+        graph.linkNodes(c, d);
+        graph.linkNodes(c, e);
+        graph.linkNodes(d, e);
+
+        graph.linkNodes(e, x);
+    }
+
+    /**
+     * A convoluted graph which does have a cycle
+     */
+    @Test(expected = CycleException.class)
+    public void should_not_allow_convoluted_graph_with_a_cycle_to_be_constructed() throws CycleException, UnknownNodeException {
+        Node a = createNode();
+        Node b = createNode();
+        Node c = createNode();
+        Node d = createNode();
+        Node e = createNode();
+
+        Node x = createNode();
+
+        graph.addNodes(a, b, c, d, e, x);
+
+        graph.linkNodes(a, b);
+        graph.linkNodes(a, c);
+        graph.linkNodes(b, d);
+        graph.linkNodes(c, d);
+        graph.linkNodes(c, e);
+        graph.linkNodes(d, e);
+
+        graph.linkNodes(e, x);
+
+        graph.linkNodes(x, b);
+    }
+
+    /**
      * Add two nodes to a graph, and link them together twice, asserting that this is indicated by linkNodes and that
      * the link does not count twice.
      */

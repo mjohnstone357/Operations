@@ -29,9 +29,18 @@ public class Graph {
         Collections.addAll(this.nodes, nodes);
     }
 
-    public boolean linkNodes(@NotNull Node node1, @NotNull Node node2) throws CycleException {
-        assert nodes.contains(node1);
-        assert nodes.contains(node2);
+    /**
+     * Link nodes in the graph
+     * @param node1 the source node
+     * @param node2 the target node
+     * @return true if and only if the link from node1 to node2 already existed in this Graph
+     * @throws CycleException if adding the specified link would result in the graph containing a cycle
+     * @throws UnknownNodeException if the node has not been added to the graph
+     */
+    public boolean linkNodes(@NotNull Node node1, @NotNull Node node2) throws CycleException, UnknownNodeException {
+        if (!nodes.contains(node1) || !nodes.contains(node2)) {
+            throw new UnknownNodeException();
+        }
 
         if (holdsLinkBetween(node2, node1)) {
             // Primitive two-node cycle detection

@@ -7,6 +7,7 @@ import org.operationsproject.operations.graph.Node;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKED_TO_BY;
 import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKS_TO;
@@ -100,6 +101,16 @@ public class GraphTests {
     }
 
     // TODO Test adding the same link twice
+    @Test
+    public void should_indicate_that_link_already_existed() throws CycleException {
+        Node node1 = createNode();
+        Node node2 = createNode();
+
+        graph.addNodes(node1, node2);
+
+        assertFalse(graph.linkNodes(node1, node2));
+        assertTrue(graph.linkNodes(node1, node2));
+    }
 
     // TODO Tests for lots more complicated cycle detection
 

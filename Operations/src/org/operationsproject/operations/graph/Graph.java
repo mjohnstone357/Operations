@@ -29,14 +29,19 @@ public class Graph {
         Collections.addAll(this.nodes, nodes);
     }
 
-    public void linkNodes(@NotNull Node node1, @NotNull Node node2) throws CycleException {
+    public boolean linkNodes(@NotNull Node node1, @NotNull Node node2) throws CycleException {
         assert nodes.contains(node1);
         assert nodes.contains(node2);
+
+        boolean alreadyPresent = holdsLinkBetween(node1, node2);
+
         nodeLinks.add(new NodeLink(node1, node2));
         if (holdsLinkBetween(node2, node1)) {
             // Primitive two-node cycle detection
             throw new CycleException();
         }
+
+        return alreadyPresent;
     }
 
     public Set<Node> getAllNodes() {

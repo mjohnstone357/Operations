@@ -100,7 +100,10 @@ public class GraphTests {
         graph.linkNodes(node2, node1);
     }
 
-    // TODO Test adding the same link twice
+    /**
+     * Add two nodes to a graph, and link them together twice, asserting that this is indicated by linkNodes and that
+     * the link does not count twice.
+     */
     @Test
     public void should_indicate_that_link_already_existed() throws CycleException {
         Node node1 = createNode();
@@ -110,6 +113,9 @@ public class GraphTests {
 
         assertFalse(graph.linkNodes(node1, node2));
         assertTrue(graph.linkNodes(node1, node2));
+
+        Set<Node> linkedNodes = graph.getLinkedNodes(LINKED_TO_BY, node1);
+        assertEquals(1, linkedNodes.size());
     }
 
     // TODO Tests for lots more complicated cycle detection

@@ -18,7 +18,7 @@ import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKS_T
  *         Date: 31/05/13
  *         Time: 20:36
  */
-public class GraphTests {
+public class GraphTest {
 
     private Graph graph;
 

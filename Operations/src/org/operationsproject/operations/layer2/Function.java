@@ -23,7 +23,6 @@ import java.util.List;
  */
 public interface Function {
 
-    // TODO Apply NotNull annotations
     public List<String> getResults();
 
     public void compute();

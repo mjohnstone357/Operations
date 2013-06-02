@@ -14,6 +14,7 @@
 
 package org.operationsproject.operations.layer2.testfunctions;
 
+import org.jetbrains.annotations.NotNull;
 import org.operationsproject.operations.layer2.Function;
 
 import java.util.List;
@@ -28,7 +29,8 @@ public abstract class AbstractFunction implements Function {
     protected List<String> results;
     protected List<String> inputs;
 
-    public List<String> getResults() {
+    public @NotNull
+    List<String> getResults() {
         assert results != null;
         return results;
     }

@@ -2,6 +2,8 @@ package org.operationsproject.operations.layer2.testfunctions;
 
 import org.operationsproject.operations.layer2.Function;
 
+import java.util.List;
+
 /**
  * @author Matthew Johnstone
  *         Date: 01/06/13
@@ -9,16 +11,16 @@ import org.operationsproject.operations.layer2.Function;
  */
 public class Identity implements Function{
 
-    private String input;
+    private List<String> inputs;
 
     @Override
-    public String apply() {
-        assert input != null;
-        return input;
+    public List<String> apply() {
+        assert inputs != null;
+        return inputs;
     }
 
     @Override
-    public void setInput(String input) {
-        this.input = input;
+    public void setInputs(List<String> inputs) {
+        this.inputs = inputs;
     }
 }

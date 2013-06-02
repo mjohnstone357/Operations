@@ -1,5 +1,7 @@
 package org.operationsproject.operations.layer2;
 
+import java.util.List;
+
 /**
  * @author Matthew Johnstone
  *         Date: 01/06/13
@@ -8,8 +10,8 @@ package org.operationsproject.operations.layer2;
 public interface Function {
 
     // TODO Apply NotNull annotations
-    public String apply();
+    public List<String> apply();
 
-    public void setInput(String input);
+    public void setInputs(List<String> inputs);
 
 }

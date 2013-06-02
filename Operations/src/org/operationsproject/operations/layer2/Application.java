@@ -6,6 +6,7 @@ import org.operationsproject.operations.graph.Node;
 import org.operationsproject.operations.graph.UnknownNodeException;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,7 +37,7 @@ public class Application {
 
     }
 
-    public String evaluate(Function function) {
+    public List<String> evaluate(Function function) {
         // Get the node for the function
 
         // Traverse the graph, finding the root data source
@@ -55,15 +56,15 @@ public class Application {
 
         Node<Function> returnNode = finalNode;
 
-        String currentInput = finalNode.getPayload().apply();
+        List<String> currentInputs = finalNode.getPayload().apply();
 
         while (true) {
 
             Function currentFunction = returnNode.getPayload();
 
 
-            currentFunction.setInput(currentInput);
-            currentInput = currentFunction.apply();
+            currentFunction.setInputs(currentInputs);
+            currentInputs = currentFunction.apply();
 
             Set<Node<Function>> linkedNodes1 = graph.getLinkedNodes(Graph.EdgeDirection.LINKED_TO_BY, returnNode);
 
@@ -80,7 +81,7 @@ public class Application {
 
         }
 
-        return currentInput;
+        return currentInputs;
 
     }
 

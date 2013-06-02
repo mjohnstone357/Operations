@@ -4,8 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.operationsproject.operations.graph.CycleException;
 import org.operationsproject.operations.graph.UnknownNodeException;
-import org.operationsproject.operations.layer2.testfunctions.HelloWorld;
-import org.operationsproject.operations.layer2.testfunctions.Identity;
+import org.operationsproject.operations.layer2.testfunctions.*;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -29,8 +30,8 @@ public class ApplicationTest {
         Function helloWorld = new HelloWorld();
         application.addFunction(helloWorld);
 
-        String result = application.evaluate(helloWorld);
-        assertEquals("Hello, World", result);
+        List<String> results = application.evaluate(helloWorld);
+        assertEquals("Hello, World", results.get(0));
     }
 
     @Test
@@ -44,8 +45,26 @@ public class ApplicationTest {
 
         application.addDataDependency(helloWorld, identity);
 
-        String result = application.evaluate(identity);
-        assertEquals("Hello, World", result);
+        List<String> results = application.evaluate(identity);
+        assertEquals("Hello, World", results.get(0));
+    }
+
+    @Test
+    public void should_evaluate_foobar_concatenation_example_correctly() throws CycleException, UnknownNodeException {
+
+        Function foo = new Foo();
+        Function bar = new Bar();
+        Function concat = new Concatenate();
+
+        application.addFunction(foo);
+        application.addFunction(bar);
+        application.addFunction(concat);
+
+        application.addDataDependency(foo, concat);
+        application.addDataDependency(bar, concat);
+
+        List<String> results = application.evaluate(concat);
+        assertEquals("FooBar", results.get(0));
     }
 
     @Test(expected = CycleException.class)
@@ -110,8 +129,8 @@ public class ApplicationTest {
         application.addDataDependency(identity1, identity2);
         application.addDataDependency(identity2, identity3);
 
-        String result = application.evaluate(identity3);
-        assertEquals("Hello, World", result);
+        List<String> results = application.evaluate(identity3);
+        assertEquals("Hello, World", results.get(0));
     }
 
 }

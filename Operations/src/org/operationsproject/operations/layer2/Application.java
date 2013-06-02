@@ -29,24 +29,16 @@ import java.util.*;
  */
 public class Application {
 
-    private Set<Function> functions;
     private Graph<Function> graph;
 
     public Application() {
-        functions = new HashSet<>();
         // For now, the graph just contains functions. In future it'll have functions, values and constraints
         graph = new Graph<>();
     }
 
     public void addFunction(Function function) {
-        if (!functions.contains(function)) {
-            functions.add(function);
-            Node<Function> node = new Node<>(function);
-
-            graph.addNode(node);
-
-        }
-
+        Node<Function> node = new Node<>(function);
+        graph.addNode(node);
     }
 
     public List<String> evaluate(Function function) throws UnknownNodeException {

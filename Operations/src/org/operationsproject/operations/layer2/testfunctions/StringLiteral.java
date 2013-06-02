@@ -1,10 +1,8 @@
 package org.operationsproject.operations.layer2.testfunctions;
 
-import org.operationsproject.operations.layer2.Function;
-
 import java.util.ArrayList;
 
-public class StringLiteral extends AbstractFunction implements Function {
+public class StringLiteral extends AbstractFunction {
 
     private String value;
 

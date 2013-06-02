@@ -1,7 +1,5 @@
 package org.operationsproject.operations.layer2.testfunctions;
 
-import org.operationsproject.operations.layer2.Function;
-
 import java.util.ArrayList;
 
 /**
@@ -10,7 +8,7 @@ import java.util.ArrayList;
  *         Date: 01/06/13
  *         Time: 23:06
  */
-public class HelloWorld extends AbstractFunction implements Function {
+public class HelloWorld extends AbstractFunction {
 
     @Override
     public void compute() {

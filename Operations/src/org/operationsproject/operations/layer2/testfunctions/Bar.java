@@ -1,10 +1,8 @@
 package org.operationsproject.operations.layer2.testfunctions;
 
-import org.operationsproject.operations.layer2.Function;
-
 import java.util.ArrayList;
 
-public class Bar extends AbstractFunction implements Function {
+public class Bar extends AbstractFunction {
 
     @Override
     public void compute() {

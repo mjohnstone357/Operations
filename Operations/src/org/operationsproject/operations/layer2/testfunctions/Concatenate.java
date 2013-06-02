@@ -1,10 +1,8 @@
 package org.operationsproject.operations.layer2.testfunctions;
 
-import org.operationsproject.operations.layer2.Function;
-
 import java.util.ArrayList;
 
-public class Concatenate extends AbstractFunction implements Function {
+public class Concatenate extends AbstractFunction {
 
     @Override
     public void compute() {

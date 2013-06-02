@@ -9,6 +9,7 @@ import org.operationsproject.operations.layer2.testfunctions.*;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Matthew Johnstone
@@ -64,7 +65,8 @@ public class ApplicationTest {
         application.addDataDependency(bar, concat);
 
         List<String> results = application.evaluate(concat);
-        assertEquals("FooBar", results.get(0));
+        String actual = results.get(0);
+        assertTrue(actual.equals("FooBar") || actual.equals("BarFoo"));
     }
 
     @Test(expected = CycleException.class)

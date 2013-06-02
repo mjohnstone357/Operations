@@ -10,7 +10,9 @@ import java.util.List;
 public interface Function {
 
     // TODO Apply NotNull annotations
-    public List<String> apply();
+    public List<String> getResults();
+
+    public void compute();
 
     public void setInputs(List<String> inputs);
 

@@ -5,9 +5,7 @@ import org.operationsproject.operations.graph.Graph;
 import org.operationsproject.operations.graph.Node;
 import org.operationsproject.operations.graph.UnknownNodeException;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class representing an Operations application.
@@ -38,51 +36,47 @@ public class Application {
     }
 
     public List<String> evaluate(Function function) {
-        // Get the node for the function
 
-        // Traverse the graph, finding the root data source
-        Node<Function> node = graph.getNodeWithPayload(function);
+        List<Function> functionsToEvaluate = new ArrayList<>();
+        functionsToEvaluate.add(function);
 
-        Set<Node<Function>> linkedNodes;
+        Stack<Function> functionStack = new Stack<>();
+        functionStack.add(function);
 
-        Node<Function> finalNode = node;
-
-        while (!(linkedNodes = graph.getLinkedNodes(Graph.EdgeDirection.LINKS_TO, finalNode)).isEmpty()) {
-            assert linkedNodes.size() == 1;
-            finalNode = linkedNodes.iterator().next();
-        }
-
-        assert finalNode != null;
-
-        Node<Function> returnNode = finalNode;
-
-        List<String> currentInputs = finalNode.getPayload().apply();
-
-        while (true) {
-
-            Function currentFunction = returnNode.getPayload();
-
-
-            currentFunction.setInputs(currentInputs);
-            currentInputs = currentFunction.apply();
-
-            Set<Node<Function>> linkedNodes1 = graph.getLinkedNodes(Graph.EdgeDirection.LINKED_TO_BY, returnNode);
-
-            if (!linkedNodes1.isEmpty()) {
-                returnNode = linkedNodes1.iterator().next();
-            } else {
-                break;
+        try {
+            while(!functionStack.isEmpty()) {
+                Function currentFunction = functionStack.pop();
+                Set<Node<Function>> nextNodes = graph.getLinkedNodesByPayload(Graph.EdgeDirection.LINKS_TO, currentFunction);
+                for (Node<Function> node : nextNodes) {
+                    // TODO Make the BFS a method on the graph
+                    Function payload = node.getPayload();
+                    functionStack.add(payload); // Add at the end for breadth-first search
+                    assert !functionsToEvaluate.contains(payload);
+                    functionsToEvaluate.add(payload);
+                }
             }
 
+            Collections.reverse(functionsToEvaluate);
 
-            if (returnNode == node) {
-                break;
+            for (Function functionToEvaluate : functionsToEvaluate) {
+                List<String> allInputsForFunction = new ArrayList<>();
+
+                Set<Node<Function>> incomingDependencies = graph.getLinkedNodesByPayload(Graph.EdgeDirection.LINKS_TO, functionToEvaluate);
+
+                for (Node<Function> dependency : incomingDependencies) {
+                    List<String> dependencyResults = dependency.getPayload().getResults();
+                    allInputsForFunction.addAll(dependencyResults);
+                }
+                // By this point, all of the function's dependencies have been computed and added to allInputsForFunction
+                functionToEvaluate.setInputs(allInputsForFunction);
+                functionToEvaluate.compute();
             }
 
+        } catch (UnknownNodeException e) {
+            throw new RuntimeException(e); // This shouldn't happen.
         }
 
-        return currentInputs;
-
+        return function.getResults();
     }
 
     public void addDataDependency(Function sourceFunction, Function destinationFunction) throws CycleException, UnknownNodeException {

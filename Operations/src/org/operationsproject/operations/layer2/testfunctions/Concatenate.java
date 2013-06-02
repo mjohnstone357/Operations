@@ -3,27 +3,18 @@ package org.operationsproject.operations.layer2.testfunctions;
 import org.operationsproject.operations.layer2.Function;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class Concatenate implements Function{
-
-    private List<String> inputs;
+public class Concatenate extends AbstractFunction implements Function {
 
     @Override
-    public List<String> apply() {
-
+    public void compute() {
         StringBuilder stringBuilder = new StringBuilder();
         for (String input : inputs) {
             stringBuilder.append(input);
         }
 
-        List<String> outputs = new ArrayList<>();
-        outputs.add(stringBuilder.toString());
-        return outputs;
-    }
+        results = new ArrayList<>();
+        results.add(stringBuilder.toString());
 
-    @Override
-    public void setInputs(List<String> inputs) {
-        this.inputs = inputs;
     }
 }

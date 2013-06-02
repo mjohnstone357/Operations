@@ -84,6 +84,37 @@ public class GraphTest {
         assertEquals(0, nodesLinkedToByNode2.size());
     }
 
+    @Test
+    public void should_be_able_to_navigate_between_nodes_via_payloads() throws CycleException, UnknownNodeException {
+
+        Node<Object> node1 = new Node<Object>("Test");
+        Node<Object> node2 = new Node<Object>("Test2");
+
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.linkNodes(node1, node2);
+
+        Set<Node<Object>> nodesLinkingToNode1 = graph.getLinkedNodesByPayload(LINKS_TO, "Test");
+        assertEquals(0, nodesLinkingToNode1.size());
+
+        Set<Node<Object>> nodesLinkedToByNode1 = graph.getLinkedNodesByPayload(LINKED_TO_BY, "Test");
+        assertEquals(1, nodesLinkedToByNode1.size());
+        assertEquals(node2, nodesLinkedToByNode1.iterator().next());
+
+        Set<Node<Object>> nodesLinkingToNode2 = graph.getLinkedNodesByPayload(LINKS_TO, "Test2");
+        assertEquals(1, nodesLinkingToNode2.size());
+        assertEquals(node1, nodesLinkingToNode2.iterator().next());
+
+        Set<Node<Object>> nodesLinkedToByNode2 = graph.getLinkedNodesByPayload(LINKED_TO_BY, "Test2");
+        assertEquals(0, nodesLinkedToByNode2.size());
+    }
+
+    @Test(expected = UnknownNodeException.class)
+    public void should_object_if_asked_to_find_linked_nodes_for_a_node_not_present_in_the_graph() throws UnknownNodeException {
+        Node<Object> node1 = createNode();
+        graph.getLinkedNodes(LINKS_TO, node1);
+    }
+
     /**
      * Add two nodes to a graph, and attempt to link them together, forming a cycle
      */

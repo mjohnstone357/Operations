@@ -3,21 +3,12 @@ package org.operationsproject.operations.layer2.testfunctions;
 import org.operationsproject.operations.layer2.Function;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class Foo implements Function{
-
+public class Foo extends AbstractFunction implements Function {
 
     @Override
-    public List<String> apply() {
-        List<String> outputs = new ArrayList<>();
-        outputs.add("Bar");
-        return outputs;
+    public void compute() {
+        results = new ArrayList<>();
+        results.add("Foo");
     }
-
-    @Override
-    public void setInputs(List<String> inputs) {
-
-    }
-
 }

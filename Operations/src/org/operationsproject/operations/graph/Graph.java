@@ -30,6 +30,7 @@ public class Graph<T> {
      * @param node the node to add
      */
     public void addNode(Node<T> node) {
+        // TODO Should we assert that each payload only appears in the graph once?
         nodes.add(node);
     }
 
@@ -123,7 +124,8 @@ public class Graph<T> {
      * @param node the node whose neighbours are wanted
      * @return all of the nodes in the Graph which link to- or are linked to by- the given node, as requested
      */
-    public Set<Node<T>> getLinkedNodes(EdgeDirection direction, Node node) {
+    public Set<Node<T>> getLinkedNodes(EdgeDirection direction, @NotNull Node node) throws UnknownNodeException {
+        validateNodesArePresentInGraph(node);
         Set<Node<T>> linkedNodes = new HashSet<>();
         for (NodeLink<T> nodeLink : nodeLinks) {
             Node<T> resultNode = nodeLink.getNodeFromDirection(node, direction);
@@ -132,6 +134,14 @@ public class Graph<T> {
             }
         }
         return linkedNodes;
+    }
+
+    public Set<Node<T>> getLinkedNodesByPayload(EdgeDirection direction, @NotNull T payload) throws UnknownNodeException {
+        Node<T> node = getNodeWithPayload(payload);
+        if (node == null) {
+            throw new UnknownNodeException();
+        }
+        return getLinkedNodes(direction, node);
     }
 
     private boolean holdsLinkBetween(Node node1, Node node2) {

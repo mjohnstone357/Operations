@@ -11,17 +11,17 @@ import static org.operationsproject.operations.graph.Graph.EdgeDirection;
  *         Date: 31/05/13
  *         Time: 23:07
  */
-public class NodeLink {
+public class NodeLink<T> {
 
-    public Node sourceNode;
-    public Node targetNode;
+    public Node<T> sourceNode;
+    public Node<T> targetNode;
 
-    public NodeLink(@NotNull Node sourceNode, @NotNull Node targetNode) {
+    public NodeLink(@NotNull Node<T> sourceNode, @NotNull Node<T> targetNode) {
         this.sourceNode = sourceNode;
         this.targetNode = targetNode;
     }
 
-    public @Nullable Node getNodeFromDirection(@NotNull Node node, @NotNull EdgeDirection direction) {
+    public @Nullable Node<T> getNodeFromDirection(@NotNull Node node, @NotNull EdgeDirection direction) {
         if (direction == EdgeDirection.LINKS_TO && targetNode == node) {
                 return sourceNode;
         } else if (direction == EdgeDirection.LINKED_TO_BY && sourceNode == node) {

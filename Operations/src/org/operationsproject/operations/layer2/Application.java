@@ -5,9 +5,7 @@ import org.operationsproject.operations.graph.Graph;
 import org.operationsproject.operations.graph.Node;
 import org.operationsproject.operations.graph.UnknownNodeException;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,26 +17,18 @@ import java.util.Set;
 public class Application {
 
     private Set<Function> functions;
-    private Graph graph;
-
-    private Map<Function, Node> functionsToNodes;
-    private Map<Node, Function> nodesToFunctions;
+    private Graph<Function> graph;
 
     public Application() {
         functions = new HashSet<>();
-        graph = new Graph();
-
-        functionsToNodes = new HashMap<>();
-        nodesToFunctions = new HashMap<>();
+        // For now, the graph just contains functions. In future it'll have functions, values and constraints
+        graph = new Graph<>();
     }
 
     public void addFunction(Function function) {
         if (!functions.contains(function)) {
             functions.add(function);
-            Node node = new Node();
-
-            functionsToNodes.put(function, node);
-            nodesToFunctions.put(node, function);
+            Node<Function> node = new Node<>(function);
 
             graph.addNode(node);
 
@@ -50,11 +40,11 @@ public class Application {
         // Get the node for the function
 
         // Traverse the graph, finding the root data source
-        Node node = functionsToNodes.get(function);
+        Node<Function> node = graph.getNodeWithPayload(function);
 
-        Set<Node> linkedNodes;
+        Set<Node<Function>> linkedNodes;
 
-        Node finalNode = node;
+        Node<Function> finalNode = node;
 
         while (!(linkedNodes = graph.getLinkedNodes(Graph.EdgeDirection.LINKS_TO, finalNode)).isEmpty()) {
             assert linkedNodes.size() == 1;
@@ -63,18 +53,19 @@ public class Application {
 
         assert finalNode != null;
 
-        Node returnNode = finalNode;
+        Node<Function> returnNode = finalNode;
 
-        String currentInput = nodesToFunctions.get(finalNode).apply();
+        String currentInput = finalNode.getPayload().apply();
 
         while (true) {
 
-            Function currentFunction = nodesToFunctions.get(returnNode);
+            Function currentFunction = returnNode.getPayload();
+
 
             currentFunction.setInput(currentInput);
             currentInput = currentFunction.apply();
 
-            Set<Node> linkedNodes1 = graph.getLinkedNodes(Graph.EdgeDirection.LINKED_TO_BY, returnNode);
+            Set<Node<Function>> linkedNodes1 = graph.getLinkedNodes(Graph.EdgeDirection.LINKED_TO_BY, returnNode);
 
             if (!linkedNodes1.isEmpty()) {
                 returnNode = linkedNodes1.iterator().next();
@@ -94,8 +85,8 @@ public class Application {
     }
 
     public void addDataDependency(Function sourceFunction, Function destinationFunction) {
-        Node node1 = functionsToNodes.get(sourceFunction);
-        Node node2 = functionsToNodes.get(destinationFunction);
+        Node<Function> node1 = graph.getNodeWithPayload(sourceFunction);
+        Node<Function> node2 = graph.getNodeWithPayload(destinationFunction);
 
         assert node1 != null && node2 != null;
 

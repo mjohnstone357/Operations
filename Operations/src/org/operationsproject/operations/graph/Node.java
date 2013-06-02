@@ -6,8 +6,15 @@ package org.operationsproject.operations.graph;
  *         Date: 31/05/13
  *         Time: 20:34
  */
-public class Node {
+public class Node<T> {
 
-    public Node() {
+    private T payload;
+
+    public Node(T payload) {
+        this.payload = payload;
+    }
+
+    public T getPayload() {
+        return payload;
     }
 }

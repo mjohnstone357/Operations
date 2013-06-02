@@ -16,11 +16,11 @@ import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKS_T
  */
 public class GraphTest {
 
-    private Graph graph;
+    private Graph<Object> graph;
 
     @Before
     public void setUp() {
-        graph = new Graph();
+        graph = new Graph<>();
     }
 
     /**
@@ -29,10 +29,10 @@ public class GraphTest {
     @Test
     public void should_return_sole_added_node() {
 
-        Node node = createNode();
+        Node<Object> node = createNode();
         graph.addNode(node);
 
-        Set<Node> allNodes = graph.getAllNodes();
+        Set<Node<Object>> allNodes = graph.getAllNodes();
 
         assertEquals(1, allNodes.size());
         assertEquals(node, allNodes.iterator().next());
@@ -44,12 +44,12 @@ public class GraphTest {
     @Test
     public void should_return_both_added_nodes() {
 
-        Node node1 = createNode();
-        Node node2 = createNode();
+        Node<Object> node1 = createNode();
+        Node<Object> node2 = createNode();
 
         graph.addNode(node1);
         graph.addNode(node2);
-        Set<Node> allNodes = graph.getAllNodes();
+        Set<Node<Object>> allNodes = graph.getAllNodes();
 
         assertEquals(2, allNodes.size());
         assertTrue(allNodes.contains(node1));
@@ -62,24 +62,25 @@ public class GraphTest {
     @Test
     public void should_be_able_to_navigate_between_nodes() throws CycleException, UnknownNodeException {
 
-        Node node1 = createNode();
-        Node node2 = createNode();
+        Node<Object> node1 = createNode();
+        Node<Object> node2 = createNode();
 
-        graph.addNodes(node1, node2);
+        graph.addNode(node1);
+        graph.addNode(node2);
         graph.linkNodes(node1, node2);
 
-        Set<Node> nodesLinkingToNode1 = graph.getLinkedNodes(LINKS_TO, node1);
+        Set<Node<Object>> nodesLinkingToNode1 = graph.getLinkedNodes(LINKS_TO, node1);
         assertEquals(0, nodesLinkingToNode1.size());
 
-        Set<Node> nodesLinkedToByNode1 = graph.getLinkedNodes(LINKED_TO_BY, node1);
+        Set<Node<Object>> nodesLinkedToByNode1 = graph.getLinkedNodes(LINKED_TO_BY, node1);
         assertEquals(1, nodesLinkedToByNode1.size());
         assertEquals(node2, nodesLinkedToByNode1.iterator().next());
 
-        Set<Node> nodesLinkingToNode2 = graph.getLinkedNodes(LINKS_TO, node2);
+        Set<Node<Object>> nodesLinkingToNode2 = graph.getLinkedNodes(LINKS_TO, node2);
         assertEquals(1, nodesLinkingToNode2.size());
         assertEquals(node1, nodesLinkingToNode2.iterator().next());
 
-        Set<Node> nodesLinkedToByNode2 = graph.getLinkedNodes(LINKED_TO_BY, node2);
+        Set<Node<Object>> nodesLinkedToByNode2 = graph.getLinkedNodes(LINKED_TO_BY, node2);
         assertEquals(0, nodesLinkedToByNode2.size());
     }
 
@@ -88,10 +89,11 @@ public class GraphTest {
      */
     @Test(expected = CycleException.class)
     public void should_prevent_cycle_between_two_nodes_from_being_allowed() throws CycleException, UnknownNodeException {
-        Node node1 = createNode();
-        Node node2 = createNode();
+        Node<Object> node1 = createNode();
+        Node<Object> node2 = createNode();
 
-        graph.addNodes(node1, node2);
+        graph.addNode(node1);
+        graph.addNode(node2);
 
         graph.linkNodes(node1, node2);
         graph.linkNodes(node2, node1);
@@ -102,8 +104,8 @@ public class GraphTest {
      */
     @Test(expected = UnknownNodeException.class)
     public void should_only_link_node_if_it_exists_in_the_graph_0() throws CycleException, UnknownNodeException {
-        Node node1 = createNode();
-        Node node2 = createNode();
+        Node<Object> node1 = createNode();
+        Node<Object> node2 = createNode();
 
         graph.linkNodes(node1, node2);
     }
@@ -113,8 +115,8 @@ public class GraphTest {
      */
     @Test(expected = UnknownNodeException.class)
     public void should_only_link_node_if_it_exists_in_the_graph_1a() throws CycleException, UnknownNodeException {
-        Node node1 = createNode();
-        Node node2 = createNode();
+        Node<Object> node1 = createNode();
+        Node<Object> node2 = createNode();
 
         graph.addNode(node1);
 
@@ -126,8 +128,8 @@ public class GraphTest {
      */
     @Test(expected = UnknownNodeException.class)
     public void should_only_link_node_if_it_exists_in_the_graph_1b() throws CycleException, UnknownNodeException {
-        Node node1 = createNode();
-        Node node2 = createNode();
+        Node<Object> node1 = createNode();
+        Node<Object> node2 = createNode();
 
         graph.addNode(node2);
 
@@ -139,11 +141,13 @@ public class GraphTest {
      */
     @Test(expected = CycleException.class)
     public void should_prevent_cycle_between_three_nodes_from_being_allowed() throws CycleException, UnknownNodeException {
-        Node node1 = createNode();
-        Node node2 = createNode();
-        Node node3 = createNode();
+        Node<Object> node1 = createNode();
+        Node<Object> node2 = createNode();
+        Node<Object> node3 = createNode();
 
-        graph.addNodes(node1, node2, node3);
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.addNode(node3);
 
         graph.linkNodes(node1, node2);
         graph.linkNodes(node2, node3);
@@ -155,12 +159,15 @@ public class GraphTest {
      */
     @Test(expected = CycleException.class)
     public void should_prevent_cycle_between_four_nodes_from_being_allowed() throws CycleException, UnknownNodeException {
-        Node node1 = createNode();
-        Node node2 = createNode();
-        Node node3 = createNode();
-        Node node4 = createNode();
+        Node<Object> node1 = createNode();
+        Node<Object> node2 = createNode();
+        Node<Object> node3 = createNode();
+        Node<Object> node4 = createNode();
 
-        graph.addNodes(node1, node2, node3, node4);
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.addNode(node3);
+        graph.addNode(node4);
 
         graph.linkNodes(node1, node2);
         graph.linkNodes(node2, node3);
@@ -173,15 +180,20 @@ public class GraphTest {
      */
     @Test
     public void should_allow_convoluted_graph_to_be_constructed() throws CycleException, UnknownNodeException {
-        Node a = createNode();
-        Node b = createNode();
-        Node c = createNode();
-        Node d = createNode();
-        Node e = createNode();
+        Node<Object> a = createNode();
+        Node<Object> b = createNode();
+        Node<Object> c = createNode();
+        Node<Object> d = createNode();
+        Node<Object> e = createNode();
 
-        Node x = createNode();
+        Node<Object> x = createNode();
 
-        graph.addNodes(a, b, c, d, e, x);
+        graph.addNode(a);
+        graph.addNode(b);
+        graph.addNode(c);
+        graph.addNode(d);
+        graph.addNode(e);
+        graph.addNode(x);
 
         graph.linkNodes(a, b);
         graph.linkNodes(a, c);
@@ -198,15 +210,20 @@ public class GraphTest {
      */
     @Test(expected = CycleException.class)
     public void should_not_allow_convoluted_graph_with_a_cycle_to_be_constructed() throws CycleException, UnknownNodeException {
-        Node a = createNode();
-        Node b = createNode();
-        Node c = createNode();
-        Node d = createNode();
-        Node e = createNode();
+        Node<Object> a = createNode();
+        Node<Object> b = createNode();
+        Node<Object> c = createNode();
+        Node<Object> d = createNode();
+        Node<Object> e = createNode();
 
-        Node x = createNode();
+        Node<Object> x = createNode();
 
-        graph.addNodes(a, b, c, d, e, x);
+        graph.addNode(a);
+        graph.addNode(b);
+        graph.addNode(c);
+        graph.addNode(d);
+        graph.addNode(e);
+        graph.addNode(x);
 
         graph.linkNodes(a, b);
         graph.linkNodes(a, c);
@@ -226,20 +243,21 @@ public class GraphTest {
      */
     @Test
     public void should_indicate_that_link_already_existed() throws CycleException, UnknownNodeException {
-        Node node1 = createNode();
-        Node node2 = createNode();
+        Node<Object> node1 = createNode();
+        Node<Object> node2 = createNode();
 
-        graph.addNodes(node1, node2);
+        graph.addNode(node1);
+        graph.addNode(node2);
 
         assertFalse(graph.linkNodes(node1, node2));
         assertTrue(graph.linkNodes(node1, node2));
 
-        Set<Node> linkedNodes = graph.getLinkedNodes(LINKED_TO_BY, node1);
+        Set<Node<Object>> linkedNodes = graph.getLinkedNodes(LINKED_TO_BY, node1);
         assertEquals(1, linkedNodes.size());
     }
 
-    private Node createNode() {
-        return new Node();
+    private Node<Object> createNode() {
+        return new Node<>(null);
     }
 
 }

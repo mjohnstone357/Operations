@@ -110,6 +110,18 @@ public class GraphTest {
     }
 
     @Test(expected = UnknownNodeException.class)
+    public void should_throw_exception_if_asked_to_get_linked_nodes_for_unknown_payload() throws UnknownNodeException {
+
+        Node<Object> node1 = new Node<Object>("Test");
+        Node<Object> node2 = new Node<Object>("Test2");
+
+        graph.addNode(node1);
+        graph.addNode(node2);
+
+        graph.getLinkedNodesByPayload(LINKS_TO, "blarg");
+    }
+
+    @Test(expected = UnknownNodeException.class)
     public void should_object_if_asked_to_find_linked_nodes_for_a_node_not_present_in_the_graph() throws UnknownNodeException {
         Node<Object> node1 = createNode();
         graph.getLinkedNodes(LINKS_TO, node1);

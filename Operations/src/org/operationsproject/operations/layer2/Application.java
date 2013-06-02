@@ -35,7 +35,7 @@ public class Application {
 
     }
 
-    public List<String> evaluate(Function function) {
+    public List<String> evaluate(Function function) throws UnknownNodeException {
 
         List<Function> functionsToEvaluate = new ArrayList<>();
         functionsToEvaluate.add(function);
@@ -43,38 +43,35 @@ public class Application {
         Stack<Function> functionStack = new Stack<>();
         functionStack.add(function);
 
-        try {
-            while(!functionStack.isEmpty()) {
-                Function currentFunction = functionStack.pop();
-                Set<Node<Function>> nextNodes = graph.getLinkedNodesByPayload(Graph.EdgeDirection.LINKS_TO, currentFunction);
-                for (Node<Function> node : nextNodes) {
-                    // TODO Make the BFS a method on the graph
-                    Function payload = node.getPayload();
-                    functionStack.add(payload); // Add at the end for breadth-first search
-                    assert !functionsToEvaluate.contains(payload);
-                    functionsToEvaluate.add(payload);
-                }
+        while(!functionStack.isEmpty()) {
+            Function currentFunction = functionStack.pop();
+            Set<Node<Function>> nextNodes = graph.getLinkedNodesByPayload(Graph.EdgeDirection.LINKS_TO, currentFunction);
+            for (Node<Function> node : nextNodes) {
+                // TODO Make the BFS a method on the graph
+                Function payload = node.getPayload();
+                functionStack.add(payload); // Add at the end for breadth-first search
+                assert !functionsToEvaluate.contains(payload);
+                functionsToEvaluate.add(payload);
             }
-
-            Collections.reverse(functionsToEvaluate);
-
-            for (Function functionToEvaluate : functionsToEvaluate) {
-                List<String> allInputsForFunction = new ArrayList<>();
-
-                Set<Node<Function>> incomingDependencies = graph.getLinkedNodesByPayload(Graph.EdgeDirection.LINKS_TO, functionToEvaluate);
-
-                for (Node<Function> dependency : incomingDependencies) {
-                    List<String> dependencyResults = dependency.getPayload().getResults();
-                    allInputsForFunction.addAll(dependencyResults);
-                }
-                // By this point, all of the function's dependencies have been computed and added to allInputsForFunction
-                functionToEvaluate.setInputs(allInputsForFunction);
-                functionToEvaluate.compute();
-            }
-
-        } catch (UnknownNodeException e) {
-            throw new RuntimeException(e); // This shouldn't happen.
         }
+
+        Collections.reverse(functionsToEvaluate);
+
+        for (Function functionToEvaluate : functionsToEvaluate) {
+            List<String> allInputsForFunction = new ArrayList<>();
+
+            Set<Node<Function>> incomingDependencies = graph.getLinkedNodesByPayload(Graph.EdgeDirection.LINKS_TO, functionToEvaluate);
+
+            for (Node<Function> dependency : incomingDependencies) {
+                List<String> dependencyResults = dependency.getPayload().getResults();
+                allInputsForFunction.addAll(dependencyResults);
+            }
+            // By this point, all of the function's dependencies have been computed and added to allInputsForFunction
+            functionToEvaluate.setInputs(allInputsForFunction);
+            functionToEvaluate.compute();
+        }
+
+
 
         return function.getResults();
     }

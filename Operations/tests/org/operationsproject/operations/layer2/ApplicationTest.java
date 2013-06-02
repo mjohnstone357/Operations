@@ -26,13 +26,19 @@ public class ApplicationTest {
     }
 
     @Test
-    public void should_evaluate_hello_world_correctly() {
+    public void should_evaluate_hello_world_correctly() throws UnknownNodeException {
 
         Function helloWorld = new HelloWorld();
         application.addFunction(helloWorld);
 
         List<String> results = application.evaluate(helloWorld);
         assertEquals("Hello, World", results.get(0));
+    }
+
+    @Test(expected = UnknownNodeException.class)
+    public void should_throw_exception_when_asked_to_evaluate_an_unknown_payload() throws UnknownNodeException {
+        Function helloWorld = new HelloWorld();
+        application.evaluate(helloWorld);
     }
 
     @Test

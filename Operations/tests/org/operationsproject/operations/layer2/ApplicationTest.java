@@ -84,8 +84,6 @@ public class ApplicationTest {
         Function delta = new StringLiteral("Delta");
         Function omega = new StringLiteral("Omega");
 
-
-
         Function rootConcat = new Concatenate();
         Function concatLeft = new Concatenate();
         Function concatRight = new Concatenate();

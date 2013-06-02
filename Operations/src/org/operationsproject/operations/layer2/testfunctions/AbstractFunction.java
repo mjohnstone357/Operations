@@ -1,5 +1,7 @@
 package org.operationsproject.operations.layer2.testfunctions;
 
+import org.operationsproject.operations.layer2.Function;
+
 import java.util.List;
 
 /**
@@ -7,7 +9,7 @@ import java.util.List;
  *         Date: 02/06/13
  *         Time: 15:12
  */
-public class AbstractFunction {
+public abstract class AbstractFunction implements Function {
 
     protected List<String> results;
     protected List<String> inputs;
@@ -16,6 +18,9 @@ public class AbstractFunction {
         assert results != null;
         return results;
     }
+
+    @Override
+    public abstract void compute();
 
     public void setInputs(List<String> inputs) {
         this.inputs = inputs;

@@ -75,6 +75,51 @@ public class ApplicationTest {
         assertTrue(actual.equals("FooBar") || actual.equals("BarFoo"));
     }
 
+    @Test
+    public void should_evaluate_concatenation_of_multiple_string_literals() throws CycleException, UnknownNodeException {
+
+        Function alpha = new StringLiteral("Alpha");
+        Function beta = new StringLiteral("Beta");
+        Function gamma = new StringLiteral("Gamma");
+        Function delta = new StringLiteral("Delta");
+        Function omega = new StringLiteral("Omega");
+
+
+
+        Function rootConcat = new Concatenate();
+        Function concatLeft = new Concatenate();
+        Function concatRight = new Concatenate();
+
+        application.addFunction(alpha);
+        application.addFunction(beta);
+        application.addFunction(gamma);
+        application.addFunction(delta);
+        application.addFunction(omega);
+
+        application.addFunction(rootConcat);
+        application.addFunction(concatLeft);
+        application.addFunction(concatRight);
+
+        application.addDataDependency(concatLeft, rootConcat);
+        application.addDataDependency(concatRight, rootConcat);
+        application.addDataDependency(omega, rootConcat);
+
+        application.addDataDependency(alpha, concatLeft);
+        application.addDataDependency(beta, concatLeft);
+
+        application.addDataDependency(gamma, concatRight);
+        application.addDataDependency(delta, concatRight);
+
+        List<String> results = application.evaluate(rootConcat);
+        String actual = results.get(0);
+        assertEquals(24, actual.length());
+        assertTrue(actual.contains("Alpha"));
+        assertTrue(actual.contains("Beta"));
+        assertTrue(actual.contains("Gamma"));
+        assertTrue(actual.contains("Delta"));
+        assertTrue(actual.contains("Omega"));
+    }
+
     @Test(expected = CycleException.class)
     public void should_prevent_circular_data_dependency() throws CycleException, UnknownNodeException {
 

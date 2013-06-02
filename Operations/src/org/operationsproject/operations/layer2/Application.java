@@ -84,19 +84,7 @@ public class Application {
 
     }
 
-    public void addDataDependency(Function sourceFunction, Function destinationFunction) {
-        Node<Function> node1 = graph.getNodeWithPayload(sourceFunction);
-        Node<Function> node2 = graph.getNodeWithPayload(destinationFunction);
-
-        assert node1 != null && node2 != null;
-
-        try {
-            graph.linkNodes(node1, node2);
-        } catch (CycleException | UnknownNodeException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            throw new RuntimeException(e);
-        }
-
-        assert node2 == graph.getLinkedNodes(Graph.EdgeDirection.LINKED_TO_BY, node1).iterator().next();
+    public void addDataDependency(Function sourceFunction, Function destinationFunction) throws CycleException, UnknownNodeException {
+        graph.linkPayloads(sourceFunction, destinationFunction);
     }
 }

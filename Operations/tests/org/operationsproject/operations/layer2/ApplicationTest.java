@@ -2,6 +2,8 @@ package org.operationsproject.operations.layer2;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.operationsproject.operations.graph.CycleException;
+import org.operationsproject.operations.graph.UnknownNodeException;
 import org.operationsproject.operations.layer2.testfunctions.HelloWorld;
 import org.operationsproject.operations.layer2.testfunctions.Identity;
 
@@ -32,7 +34,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void should_evaluate_hello_world_correctly_via_identity_function() {
+    public void should_evaluate_hello_world_correctly_via_identity_function() throws CycleException, UnknownNodeException {
 
         Function helloWorld = new HelloWorld();
         Function identity = new Identity();
@@ -46,8 +48,53 @@ public class ApplicationTest {
         assertEquals("Hello, World", result);
     }
 
+    @Test(expected = CycleException.class)
+    public void should_prevent_circular_data_dependency() throws CycleException, UnknownNodeException {
+
+        Function helloWorld = new HelloWorld();
+        Function identity = new Identity();
+
+        application.addFunction(helloWorld);
+        application.addFunction(identity);
+
+        application.addDataDependency(helloWorld, identity);
+        application.addDataDependency(identity, helloWorld);
+
+    }
+
+    @Test(expected = UnknownNodeException.class)
+    public void should_prevent_unknown_function_from_being_used_as_a_data_dependency_1() throws CycleException, UnknownNodeException {
+
+        Function helloWorld = new HelloWorld();
+        Function identity = new Identity();
+
+        application.addFunction(helloWorld);
+
+        application.addDataDependency(helloWorld, identity);
+    }
+
+    @Test(expected = UnknownNodeException.class)
+    public void should_prevent_unknown_function_from_being_used_as_a_data_dependency_2() throws CycleException, UnknownNodeException {
+
+        Function helloWorld = new HelloWorld();
+        Function identity = new Identity();
+
+        application.addFunction(identity);
+
+        application.addDataDependency(helloWorld, identity);
+    }
+
+    @Test(expected = UnknownNodeException.class)
+    public void should_prevent_unknown_function_from_being_used_as_a_data_dependency_3() throws CycleException, UnknownNodeException {
+
+        Function helloWorld = new HelloWorld();
+        Function identity = new Identity();
+
+        application.addDataDependency(helloWorld, identity);
+    }
+
     @Test
-    public void should_evaluate_hello_world_correctly_via_identity_function_three_times() {
+    public void should_evaluate_hello_world_correctly_via_identity_function_three_times() throws CycleException, UnknownNodeException {
 
         Function helloWorld = new HelloWorld();
         Function identity1 = new Identity();

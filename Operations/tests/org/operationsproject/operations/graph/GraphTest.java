@@ -238,6 +238,28 @@ public class GraphTest {
     }
 
     /**
+     * Add three nodes with string payloads, and check that they are all retrieved correctly from the graph. Also check
+     * that querying for a payload which isn't on any node in the graph returns null.
+     */
+    @Test
+    public void should_get_nodes_with_payload_and_without() {
+
+        Node<Object> node1 = new Node<Object>("One");
+        Node<Object> node2 = new Node<Object>("Two");
+        Node<Object> node3 = new Node<Object>("Three");
+
+        graph.addNode(node1);
+        graph.addNode(node2);
+        graph.addNode(node3);
+
+        assertEquals(node1, graph.getNodeWithPayload("One"));
+        assertEquals(node2, graph.getNodeWithPayload("Two"));
+        assertEquals(node3, graph.getNodeWithPayload("Three"));
+
+        assertNull(graph.getNodeWithPayload("Four"));
+    }
+
+    /**
      * Add two nodes to a graph, and link them together twice, asserting that this is indicated by linkNodes and that
      * the link does not count twice.
      */

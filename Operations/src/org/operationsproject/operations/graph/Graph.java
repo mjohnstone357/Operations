@@ -64,6 +64,17 @@ public class Graph<T> {
         return alreadyPresent;
     }
 
+    public boolean linkPayloads(@NotNull T payload1, @NotNull T payload2) throws UnknownNodeException, CycleException {
+        Node<T> node1 = getNodeWithPayload(payload1);
+        Node<T> node2 = getNodeWithPayload(payload2);
+
+        if (node1 == null || node2 == null) {
+            throw new UnknownNodeException();
+        }
+
+        return linkNodes(node1, node2);
+    }
+
     private void validateNodesArePresentInGraph(@NotNull Node... nodesToCheck) throws UnknownNodeException {
         for (Node node : nodesToCheck) {
             if (!nodes.contains(node)) {

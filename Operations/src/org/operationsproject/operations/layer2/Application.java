@@ -44,23 +44,20 @@ public class Application {
     public List<String> evaluate(Function function) throws UnknownNodeException {
 
         List<Function> functionsToEvaluate = new ArrayList<>();
-        functionsToEvaluate.add(function);
 
-        Stack<Function> functionStack = new Stack<>();
-        functionStack.add(function);
+        Node<Function> rootNode = graph.getNodeWithPayload(function);
 
-        while(!functionStack.isEmpty()) {
-            Function currentFunction = functionStack.pop();
-            Set<Node<Function>> nextNodes = graph.getLinkedNodesByPayload(Graph.EdgeDirection.LINKS_TO, currentFunction);
-            for (Node<Function> node : nextNodes) {
-                // TODO Make the BFS a method on the graph
-                Function payload = node.getPayload();
-                functionStack.add(payload); // Add at the end for breadth-first search
-                assert !functionsToEvaluate.contains(payload);
-                functionsToEvaluate.add(payload);
-            }
+        if (rootNode == null) {
+            throw new UnknownNodeException();
         }
 
+        List<Node<Function>> nodesToProcess = graph.getNodesInBreadthFirstOrdering(rootNode);
+        for (Node<Function> functionNode : nodesToProcess) {
+            functionsToEvaluate.add(functionNode.getPayload());
+        }
+
+        // We need to evaluate the functions in reverse order so that each function's dependencies are evaluated before
+        // that function is
         Collections.reverse(functionsToEvaluate);
 
         for (Function functionToEvaluate : functionsToEvaluate) {

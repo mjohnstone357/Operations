@@ -159,7 +159,7 @@ public class Graph<T> {
         return getLinkedNodes(direction, node);
     }
 
-    public List<Node<T>> getNodesInBreadthFirstOrdering(Node<T> rootNode) throws UnknownNodeException {
+    public List<Node<T>> getNodesInBreadthFirstOrdering(@NotNull Node<T> rootNode) throws UnknownNodeException {
 
         Stack<Node<T>> nodeStack = new Stack<>();
         List<Node<T>> nodeList = new ArrayList<>();

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKED_TO_BY;
+import static org.operationsproject.operations.graph.Graph.EdgeDirection.LINKS_TO;
 
 /**
  * Class representing an acyclic directed graph.
@@ -156,6 +157,27 @@ public class Graph<T> {
             throw new UnknownNodeException();
         }
         return getLinkedNodes(direction, node);
+    }
+
+    public List<Node<T>> getNodesInBreadthFirstOrdering(Node<T> rootNode) throws UnknownNodeException {
+
+        Stack<Node<T>> nodeStack = new Stack<>();
+        List<Node<T>> nodeList = new ArrayList<>();
+
+        nodeList.add(rootNode);
+        nodeStack.add(rootNode);
+
+        while(!nodeStack.isEmpty()) {
+            Node<T> currentNode = nodeStack.pop();
+            Set<Node<T>> nextNodes = getLinkedNodes(LINKS_TO, currentNode);
+            for (Node<T> node : nextNodes) {
+                nodeStack.add(node); // Adding to the end gives breadth-first search
+                assert !nodeList.contains(node);
+                nodeList.add(node);
+            }
+        }
+
+        return nodeList;
     }
 
     private boolean holdsLinkBetween(Node node1, Node node2) {

@@ -17,6 +17,7 @@ package org.operationsproject.operations.graph;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -333,6 +334,116 @@ public class GraphTest {
 
         Set<Node<Object>> linkedNodes = graph.getLinkedNodes(LINKED_TO_BY, node1);
         assertEquals(1, linkedNodes.size());
+    }
+
+    @Test
+    public void should_return_nodes_in_bfs_ordering_1() throws UnknownNodeException, CycleException {
+
+        Node<Object> root = createNode();
+
+        graph.addNode(root);
+
+        List<Node<Object>> nodes = graph.getNodesInBreadthFirstOrdering(root);
+
+        Node[] expected = {root};
+
+        assertEquals(expected.length, nodes.size());
+        assertEquals(expected[0], root);
+    }
+
+    @Test
+    public void should_return_nodes_in_bfs_ordering_2() throws UnknownNodeException, CycleException {
+
+        Node<Object> root = createNode();
+        Node<Object> child = createNode();
+
+        graph.addNode(root);
+        graph.addNode(child);
+
+        graph.linkNodes(child, root);
+
+        List<Node<Object>> nodesInBreadthFirstOrdering = graph.getNodesInBreadthFirstOrdering(root);
+
+        Node[] expected = {root, child};
+
+        assertEquals(expected.length, nodesInBreadthFirstOrdering.size());
+
+        assertEquals(expected[0], root);
+        assertEquals(expected[1], child);
+    }
+
+    @Test
+    public void should_return_nodes_in_bfs_ordering_3() throws UnknownNodeException, CycleException {
+
+        Node<Object> root = createNode();
+        Node<Object> leftChild = createNode();
+        Node<Object> rightChild = createNode();
+
+        graph.addNode(root);
+        graph.addNode(leftChild);
+        graph.addNode(rightChild);
+
+        graph.linkNodes(leftChild, root);
+        graph.linkNodes(rightChild, root);
+
+        List<Node<Object>> nodes = graph.getNodesInBreadthFirstOrdering(root);
+
+        Node[] expected = {root, leftChild, rightChild};
+
+        assertEquals(expected.length, nodes.size());
+
+        assertTrue(nodes.indexOf(root) < nodes.indexOf(leftChild));
+        assertTrue(nodes.indexOf(root) < nodes.indexOf(rightChild));
+
+    }
+
+    @Test
+    public void should_return_nodes_in_bfs_ordering_4() throws UnknownNodeException, CycleException {
+
+        Node<Object> root = createNode();
+        Node<Object> left = createNode();
+        Node<Object> right = createNode();
+        Node<Object> leftLeft = createNode();
+        Node<Object> leftRight = createNode();
+        Node<Object> rightLeft = createNode();
+        Node<Object> rightRight = createNode();
+
+        graph.addNode(root);
+        graph.addNode(left);
+        graph.addNode(right);
+        graph.addNode(leftLeft);
+        graph.addNode(leftRight);
+        graph.addNode(rightLeft);
+        graph.addNode(rightRight);
+
+        graph.linkNodes(left, root);
+        graph.linkNodes(right, root);
+
+        graph.linkNodes(leftLeft, left);
+        graph.linkNodes(leftRight, left);
+
+        graph.linkNodes(rightLeft, right);
+        graph.linkNodes(rightRight, right);
+
+        List<Node<Object>> nodes = graph.getNodesInBreadthFirstOrdering(root);
+
+        Node[] expected = {root, left, right, leftLeft, leftRight, rightLeft, rightRight};
+
+        assertEquals(expected.length, nodes.size());
+
+        assertTrue(nodes.indexOf(root) < nodes.indexOf(left));
+        assertTrue(nodes.indexOf(root) < nodes.indexOf(right));
+
+        assertTrue(nodes.indexOf(left) < nodes.indexOf(leftLeft));
+        assertTrue(nodes.indexOf(left) < nodes.indexOf(leftRight));
+        assertTrue(nodes.indexOf(left) < nodes.indexOf(rightLeft));
+        assertTrue(nodes.indexOf(left) < nodes.indexOf(rightRight));
+
+        assertTrue(nodes.indexOf(right) < nodes.indexOf(leftLeft));
+        assertTrue(nodes.indexOf(right) < nodes.indexOf(leftRight));
+        assertTrue(nodes.indexOf(right) < nodes.indexOf(rightLeft));
+        assertTrue(nodes.indexOf(right) < nodes.indexOf(rightRight));
+
     }
 
     private Node<Object> createNode() {
